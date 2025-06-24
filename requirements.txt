@@ -15,5 +15,5 @@ scipy
 Flask
 Flask-Cors
 gdown
-# DO NOT include tensorflow-macos or tensorflow here for M1/M2
+tensorflow==2.10.0
 -e .
