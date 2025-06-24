@@ -1,51 +1,27 @@
-from flask import Flask, request, jsonify, render_template
-import os
-from flask_cors import CORS, cross_origin
+import streamlit as st
 from cnnClassifier.utils.common import decodeImage
 from cnnClassifier.pipeline.prediction import PredictionPipeline
+import base64
+import os
 
+st.set_page_config(page_title="Kidney Disease Classifier", layout="centered")
 
+st.title("🧠 Kidney Disease Classification")
+st.write("Upload an image to get prediction.")
 
-os.putenv('LANG', 'en_US.UTF-8')
-os.putenv('LC_ALL', 'en_US.UTF-8')
+# File uploader
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-app = Flask(__name__)
-CORS(app)
+if uploaded_file is not None:
+    # Show the uploaded image
+    st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
 
+    # Save the file
+    with open("inputImage.jpg", "wb") as f:
+        f.write(uploaded_file.getbuffer())
 
-class ClientApp:
-    def __init__(self):
-        self.filename = "inputImage.jpg"
-        self.classifier = PredictionPipeline(self.filename)
-
-
-@app.route("/", methods=['GET'])
-@cross_origin()
-def home():
-    return render_template('index.html')
-
-
-
-
-@app.route("/train", methods=['GET','POST'])
-@cross_origin()
-def trainRoute():
-    os.system("python main.py")
-    # os.system("dvc repro")
-    return "Training done successfully!"
-
-
-
-@app.route("/predict", methods=['POST'])
-@cross_origin()
-def predictRoute():
-    image = request.json['image']
-    decodeImage(image, clApp.filename)
-    result = clApp.classifier.predict()
-    return jsonify(result)
-
-
-if __name__ == "__main__":
-    clApp = ClientApp()
-
-    app.run(host='0.0.0.0', port=8080) #for AWS
+    if st.button("🔍 Predict"):
+        with st.spinner("Predicting..."):
+            classifier = PredictionPipeline("inputImage.jpg")
+            result = classifier.predict()
+            st.success(f"🩺 Prediction: **{result['predicted_class']}**")
