@@ -15,5 +15,5 @@ scipy
 Flask
 Flask-Cors
 gdown
-# TensorFlow is already installed manually for M1/M2 Mac
+# DO NOT include tensorflow-macos or tensorflow here for M1/M2
 -e .
