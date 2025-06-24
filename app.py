@@ -23,5 +23,10 @@ if uploaded_file is not None:
     if st.button("🔍 Predict"):
         with st.spinner("Predicting..."):
             classifier = PredictionPipeline("inputImage.jpg")
-            result = classifier.predict()
-            st.success(f"🩺 Prediction: **{result['predicted_class']}**")
+            result = classifier.predict()  # result is a list of dict
+
+            # ✅ Use index to access the dictionary
+            prediction = result[0]["image"]
+            confidence = result[0]["confidence"]
+
+            st.success(f"🩺 Prediction: **{prediction}** (Confidence: {confidence:.2f})")
