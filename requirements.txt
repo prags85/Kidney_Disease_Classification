@@ -11,5 +11,6 @@ python-box==6.0.2
 types-PyYAML
 ensure==1.0.2
 gdown
-tensorflow
+tensorflow==2.16.1
+
 -e .
